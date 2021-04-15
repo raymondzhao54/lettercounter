@@ -9,8 +9,7 @@
 #include <string.h>
 #include <ctype.h>
 
-
-
+#define COUNT_SIZE 26
 #define BUFFER_SIZE 1024
 
 int max(int count[]);
@@ -19,8 +18,9 @@ int min(int count[]);
 int main()
 {
   char buffer[BUFFER_SIZE], input, curchar;
-  int i = 0, count[26];
+  int i = 0, count[COUNT_SIZE];
   int spaces = 0;
+  int other = 0;
 
 
   // request and read in the string from the user
@@ -42,9 +42,8 @@ int main()
   for (i = 0; i < strlen(buffer); i++) {
     curchar = toupper(buffer[i]);
     if (curchar >= 65 && curchar <= 90) count[curchar - 65]++;
-
-    if (curchar == ' ') spaces++;
-
+    else if (curchar == ' ') spaces++;
+    else other++;
   }
 
   // Create the letter analysis table
@@ -57,19 +56,23 @@ int main()
                                (((float) count[i]) / strlen(buffer)) * 100);
   }
 
+  // Output the number of other characters
+  printf("%-10s%-15d%-15.2f\n","Other",
+                              other,
+                              ((float) other / strlen(buffer)) * 100);
+
   printf("\nTotal spaces: %d\n", spaces);
 
-
-  // Find the max and min occuring character in the string, in particular the
-  // position in the count array of each character
+  // Find the max and min occuring letter in the string, in particular the
+  // position in the count array of each letter
   int max_pos = max(count);
   int min_pos = min(count);
   
-  // Output the max and min occuring character, again using 65 as an offset to
-  // output the character character given ASCII A-Z range from 65-90
-  printf("\nMost frequently occuring character: %c\n", 
+  // Output the max and min occuring letter, again using 65 as an offset to
+  // output the letter given ASCII A-Z range from 65-90
+  printf("\nMost frequently occuring letter: %c\n", 
          max_pos + 65);
-  printf("Least frequently occurring character: %c.\n", 
+  printf("Least frequently occurring letter: %c.\n", 
          min_pos + 65);
 
   return 0;
@@ -81,7 +84,7 @@ int max(int count[])
 {
   int max = count[0];
   int max_pos = 0;
-  for (int i = 0; i < 26; i++) {
+  for (int i = 0; i < COUNT_SIZE; i++) {
     if (count[i] > max)
     {
       max_pos = i;
@@ -97,7 +100,7 @@ int min(int count[])
 {
   int min = count[0];
   int min_pos = 0;
-  for (int i = 0; i < 26; i++) {
+  for (int i = 0; i < COUNT_SIZE; i++) {
     if (count[i] < min)
     {
       min_pos = i;
